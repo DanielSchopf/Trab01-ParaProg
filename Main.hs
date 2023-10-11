@@ -11,16 +11,16 @@ main :: IO ()
 main = scotty 3000 $ do
   middleware logStdoutDev
 
-  -- Rota de saudação
+  --rota de saudação
   get "/" $ do
     text "Olá, este é um servidor de calculadora!"
     
-  -- Rota para somar dois números
+  --rota para somar dois números
   get "/soma/:x/:y" $ do
     xStr <- param "x"
     yStr <- param "y"
 
-    -- Tentar converter os parâmetros em números
+    --tenta converter os parâmetros em números
     let maybeX = readMaybe (TL.unpack xStr)
         maybeY = readMaybe (TL.unpack yStr)
         
@@ -30,3 +30,36 @@ main = scotty 3000 $ do
         let resultado = x + y
         text (TL.pack ("Valor da operação: " ++ show resultado))
       _ -> text "Erro: Certifique-se de que x e y são números válidos."
+
+  --rota para multiplicar dois números
+  get "/mult/:x/:y" $ do
+    xStr <- param "x"
+    yStr <- param "y"
+  
+    --tenta converter os parâmetros em números
+    let maybeX = readMaybe (TL.unpack xStr)
+        maybeY = readMaybe (TL.unpack yStr)
+
+    --faz a verificação dos parametros pra validar ou a operação ou mostrar o texto de erro
+    case (maybeX, maybeY) of
+      (Just x, Just y) -> do
+        let resultado = x * y
+        text (TL.pack ("Valor da operação: " ++ show resultado))
+      _ -> text "Erro: Certifique-se de que x e y são números válidos."
+      
+  --rota para subtrair dois números
+  get "/sub/:x/:y" $ do
+    xStr <- param "x"
+    yStr <- param "y"
+
+  --tenta converter os parâmetros em números
+  let maybeX = readMaybe (TL.unpack xStr)
+      maybeY = readMaybe (TL.unpack yStr)
+      
+  --faz a verificação dos parametros pra validar ou a operação ou mostrar o texto de erro
+  case (maybeX, maybeY) of
+    (Just x, Just y) -> do
+      let resultado = x - y
+      text (TL.pack ("Valor da operação: " ++ show resultado))
+    _ -> text "Erro: Certifique-se de que x e y são números válidos."
+    
