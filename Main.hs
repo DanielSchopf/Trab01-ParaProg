@@ -11,52 +11,51 @@ main :: IO ()
 main = scotty 3000 $ do
   middleware logStdoutDev
 
-  --rota de saudação
+  --Rota base
   get "/" $ do
-    text "Olá, este é um servidor de calculadora!"
+    text "Bem-vindo ao Servidor de Calculadora!\n\nPara realizar uma operação, utilize as seguintes rotas:\n\n- Soma: /soma/valor1/valor2\n- Subtração: /sub/valor1/valor2\n- Multiplicação: /mult/valor1/valor2\n"
     
-  --rota para somar dois números
+  --Rota de Soma
   get "/soma/:x/:y" $ do
+    --Responsável por passar os valores de "x" e "y" como parâmetro para as variáveis
     xStr <- param "x"
     yStr <- param "y"
 
-    --tenta converter os parâmetros em números
+    --Responsável por fazer a conversão dos valores das variáveis "xStr" e "yStr". Inicialmente de text para string e depois de string para número
     let maybeX = readMaybe (TL.unpack xStr)
         maybeY = readMaybe (TL.unpack yStr)
         
-    -- faz a verificação dos parametros pra validar ou a operação ou mostrar o texto de erro
+    --Faz o teste para verificar se a conversão foi bem-sucedida ou não
     case (maybeX, maybeY) of
       (Just x, Just y) -> do
+        --Caso seja, faz a operação dos valores e imprime na tela a mensagem com o resultado
         let resultado = x + y
         text (TL.pack ("Valor da operação: " ++ show resultado))
+        --Caso não seja, passa para essa linha do codigo(definido pelo "coringa" _ e imprime a mensagem de erro para o usuário)
       _ -> text "Erro: Certifique-se de que x e y são números válidos."
 
-  --rota para multiplicar dois números
+  --Rota para multiplicação
   get "/mult/:x/:y" $ do
     xStr <- param "x"
     yStr <- param "y"
   
-    --tenta converter os parâmetros em números
     let maybeX = readMaybe (TL.unpack xStr)
         maybeY = readMaybe (TL.unpack yStr)
 
-    --faz a verificação dos parametros pra validar ou a operação ou mostrar o texto de erro
     case (maybeX, maybeY) of
       (Just x, Just y) -> do
         let resultado = x * y
         text (TL.pack ("Valor da operação: " ++ show resultado))
       _ -> text "Erro: Certifique-se de que x e y são números válidos."
       
-  --rota para subtrair dois números
+  --Rota para subtração
   get "/sub/:x/:y" $ do
     xStr <- param "x"
     yStr <- param "y"
 
-  --tenta converter os parâmetros em números
   let maybeX = readMaybe (TL.unpack xStr)
       maybeY = readMaybe (TL.unpack yStr)
       
-  --faz a verificação dos parametros pra validar ou a operação ou mostrar o texto de erro
   case (maybeX, maybeY) of
     (Just x, Just y) -> do
       let resultado = x - y
